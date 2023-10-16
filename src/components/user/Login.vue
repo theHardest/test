@@ -30,15 +30,6 @@ const loginForm = reactive({
     password: '',
 })
 
-const usernameRule = [
-    { required: true, message: 'username is required' },
-    { type: 'string', message: 'username must be a string' },
-]
-const passwordRule = [
-    { required: true, message: 'password is required' },
-    { type: 'string', message: 'password must be a string' },
-]
-
 const submitForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.validate(async (valid) => {

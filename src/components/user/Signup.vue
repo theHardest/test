@@ -25,17 +25,8 @@ const signupForm = reactive({
     password: '',
 })
 
-const usernameRule = [
-    { required: true, message: 'username is required' },
-    { type: 'string', message: 'username must be a string' },
-]
-const passwordRule = [
-    { required: true, message: 'password is required' },
-    { type: 'string', message: 'password must be a string' },
-]
 
-
-const emit = defineEmits<{ signup }>();
+const emit = defineEmits();
 const submitForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.validate(async (valid) => {
@@ -43,6 +34,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
             console.log('submit!')
             const { data } = await axios.post("http://localhost:8888/user/signup", signupForm).catch(error => error);
             // emit("signup");
+            console.log(data);
         } else {
             console.log('error submit!')
         }
