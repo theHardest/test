@@ -26,7 +26,6 @@ const signupForm = reactive({
 })
 
 
-const emit = defineEmits();
 const submitForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.validate(async (valid) => {

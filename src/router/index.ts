@@ -22,6 +22,8 @@ const routes = [
 
 const router = createRouter({ routes, history: createWebHistory() });
 router.beforeEach(async (to, from, next) => {
+    console.log(from);
+    
     const auth = await authCheck();
     to.name === "User" || auth ? next() : next({ name: "User" });
 });
