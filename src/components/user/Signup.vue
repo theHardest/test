@@ -1,10 +1,10 @@
 <template>
     Signup
     <el-form ref="formRef" :model="signupForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="User Name" prop="username" :rules="usernameRule">
+        <el-form-item label="User Name" prop="username">
             <el-input v-model="signupForm.username" type="text" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="Password" prop="password" :rules="passwordRule">
+        <el-form-item label="Password" prop="password">
             <el-input v-model="signupForm.password" type="text" autocomplete="off" />
         </el-form-item>
         <el-form-item>
