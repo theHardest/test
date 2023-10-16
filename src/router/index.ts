@@ -16,11 +16,6 @@ const routes = [
                 path: "beer",
                 component: () => import("../pages/Beer.vue"),
             },
-            {
-                name: "Cal",
-                path: "cal",
-                component: () => import("../pages/Cal.vue"),
-            },
         ],
     }
 ];
