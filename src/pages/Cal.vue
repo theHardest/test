@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <vue-cal
         selected-date="2018-11-19"
         :time-from="8 * 60"
@@ -10,7 +10,7 @@
         :events="events"
     />
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
@@ -38,4 +38,4 @@ const events = ref([
         class: 'leisure'
     }
 ])
-</script>
+</script> -->
