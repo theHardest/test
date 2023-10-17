@@ -402,6 +402,7 @@
 
       Telegram.WebApp.enableClosingConfirmation();
 
+      let flag = true;
       let height = Math.ceil(Telegram.WebApp.viewportHeight);
       Telegram.WebApp.onEvent('viewportChanged', ({ isStateStable }) => {
         const currentHeight = Math.ceil(Telegram.WebApp.viewportHeight);
@@ -409,8 +410,10 @@
         console.log(height > currentHeight);
         if (height > currentHeight) {
           Telegram.WebApp.expand();
-        } else {
+        }
+        if (flag) {
           height = currentHeight;
+          flag = false;
         }
       });
     </script>
