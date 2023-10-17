@@ -395,10 +395,9 @@
 
 
     <script>
-      // Telegram.WebApp.onEvent('mainButtonClicked', (e) => {
-      //   console.log('mainButtonClicked', e);
-      //   Telegram.WebApp.expand();
-      // });
+      Telegram.WebApp.onEvent('viewportChanged', (e) => {
+        console.log('viewportChanged', e);
+      });
 
       // Telegram.WebApp.enableClosingConfirmation();
 
