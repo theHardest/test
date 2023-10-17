@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <vue-cal
         selected-date="2018-11-19"
         :time-from="8 * 60"
@@ -38,4 +38,4 @@ const events = ref([
         class: 'leisure'
     }
 ])
-</script>
+</script> -->
