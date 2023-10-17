@@ -399,15 +399,15 @@
       //   console.log('mainButtonClicked', e);
       //   Telegram.WebApp.expand();
       // });
-      let height = 0;
       Telegram.WebApp.onEvent('viewportChanged', (e) => {
-        console.log('viewportChanged', e);
-        if (height < e.height) {
-          Telegram.WebApp.expand();
-          if (e.is_state_stable) {
-            height = e.height;
-          }
-        }
+        console.log(Telegram.WebApp.viewportHeight);
+        console.log(Telegram.WebApp.viewportStableHeight);
+        // if (height < e.height) {
+        //   Telegram.WebApp.expand();
+        //   if (e.is_state_stable) {
+        //     height = e.height;
+        //   }
+        // }
       });
 
       // Telegram.WebApp.onEvent('viewportChanged', (e) => {
