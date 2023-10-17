@@ -231,8 +231,6 @@
           DemoApp.init()
           $('body').addClass('gray')
           Telegram.WebApp.setHeaderColor('secondary_bg_color')
-          Telegram.viewportStableHeight = 100;
-          Telegram.viewportHeight = 100;
         }
       }
 
@@ -254,10 +252,8 @@
       let DemoAppViewport = {
         init: function () {
           DemoApp.init()
-          console.log('init');
           // $('body').addClass('gray');
           // Telegram.WebApp.setHeaderColor('secondary_bg_color');
-          Telegram.WebApp.isExpanded = true
           Telegram.WebApp.onEvent('viewportChanged', DemoAppViewport.setData)
           DemoAppViewport.setData()
         },
@@ -395,6 +391,13 @@
         $('#bg_color_input').val(Telegram.WebApp.backgroundColor)
         $('body').attr('style', '--bg-color:' + Telegram.WebApp.backgroundColor)
       })
+    </script>
+
+
+    <script>
+      Telegram.WebApp.onEvent('viewportChanged', (e) => {
+        console.log('viewportChanged', e);
+      });
     </script>
   </head>
   <body
