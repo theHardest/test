@@ -408,8 +408,9 @@
         console.log(height, currentHeight);
         console.log(height > currentHeight);
         if (height > currentHeight) {
-          height = currentHeight;
           Telegram.WebApp.expand();
+        } else {
+          height = currentHeight;
         }
       });
     </script>
