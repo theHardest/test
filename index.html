@@ -400,16 +400,15 @@
       //   Telegram.WebApp.expand();
       // });
       let height = 0;
-      Telegram.WebApp.onEvent('viewportChanged', (e) => {
-        console.log('viewportChanged', e);
-        console.log(Telegram.WebApp.viewportHeight);
-        // console.log(Telegram.WebApp.viewportStableHeight);
+      Telegram.WebApp.onEvent('viewportChanged', ({ isStateStable }) => {
         const currentHeight = Telegram.WebApp.viewportHeight;
+        console.log(currentHeight);
+        console.log(height < currentHeight);
         if (height < currentHeight) {
           Telegram.WebApp.expand();
-          // if (e.is_state_stable) {
+          if (isStateStable) {
             height = currentHeight;
-          // }
+          }
         }
       });
 
