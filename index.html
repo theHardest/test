@@ -395,17 +395,21 @@
 
 
     <script>
+      Telegram.WebApp.onEvent('mainButtonClicked', (e) => {
+        console.log('mainButtonClicked', e);
+        Telegram.WebApp.expand();
+      });
       // Telegram.WebApp.onEvent('viewportChanged', (e) => {
       //   console.log('viewportChanged', e);
       // });
 
-      Telegram.WebApp.onEvent('viewportChanged', (e) => {
-        console.log('viewportChanged', e);
-        const height = e.height;
-        const minHeight = 821;//480; // set your desired minimum height here
-        const newHeight = height < minHeight ? minHeight : height;
-        Telegram.WebApp.resizeWindow({height: newHeight});
-      });
+      // Telegram.WebApp.onEvent('viewportChanged', (e) => {
+      //   console.log('viewportChanged', e);
+      //   const height = e.height;
+      //   const minHeight = 821;//480; // set your desired minimum height here
+      //   const newHeight = height < minHeight ? minHeight : height;
+      //   Telegram.WebApp.resizeWindow({height: newHeight});
+      // });
     </script>
   </head>
   <body
