@@ -1,13 +1,14 @@
-<template>
-  <Suspense>
-    <router-view />
-  </Suspense>
-</template>
-
-<script lang="ts" setup>
-
+<script setup lang="ts">
+import { RouterLink, RouterView } from 'vue-router'
 </script>
 
-<style scoped>
+<template>
+  <div>
+    <RouterLink to="/">Home</RouterLink>
+    <RouterLink to="/about">About</RouterLink>
+  </div>
 
-</style>
+  <RouterView />
+</template>
+
+<style scoped></style>

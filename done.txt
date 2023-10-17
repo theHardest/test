@@ -1,9 +1,0 @@
-done
-    學習typescript
-    學習mongodb + mongoose
-    學習unit test
-    前台UI-AuthenticationPage登入、註冊單元測試
-    前台Component-ItemSelector單元測試
-
-except
-    學習docker

@@ -1,0 +1,25 @@
+/* color palette from <https://github.com/vuejs/theme> */
+
+/* *,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+} */
+
+body {
+  --bg-color: var(--tg-theme-bg-color);
+  font:
+    12px/18px 'Lucida Grande',
+    'Lucida Sans Unicode',
+    Arial,
+    Helvetica,
+    Verdana,
+    sans-serif;
+  background-color: var(--bg-color);
+  color: var(--tg-theme-text-color);
+  margin: 48px 24px;
+  padding: 0;
+  color-scheme: var(--tg-color-scheme);
+}

@@ -1,13 +1,556 @@
 <!doctype html>
-<html lang="en">
+<html
+  class="light"
+  style="--tg-viewport-height: 100vh; --tg-viewport-stable-height: 100vh"
+  data-lt-installed="true"
+  lang="en"
+>
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + Vue + TS</title>
+    <title>Telegram Web App</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="MobileOptimized" content="176" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="robots" content="noindex,nofollow" />
+    <script src="https://tg.dev/js/telegram-web-app.js"></script>
+    <!-- <script src="https://telegram.org/js/telegram-web-app.js"></script> -->
+    <script>
+      function setThemeClass() {
+        document.documentElement.className = Telegram.WebApp.colorScheme
+      }
+
+      Telegram.WebApp.onEvent('themeChanged', setThemeClass)
+      setThemeClass()
+    </script>
+    <link href="https://tg.dev/css/bootstrap.min.css?3" rel="stylesheet" />
+    <link href="https://tg.dev/css/bootstrap-extra.css?2" rel="stylesheet" />
+    <link href="https://webappcontent.telegram.org/css/webappdemo.css?5" rel="stylesheet" />
+    <script src="https://tg.dev/js/jquery.min.js"></script>
+    <script src="https://tg.dev/js/bootstrap.min.js"></script>
+    <!-- <script src="https://raw.githubusercontent.com/telegram-bot-php/durger-king/master/public/js/webappdemo.js"></script> -->
+    <script>
+      const Telegram = window.Telegram
+
+      let DemoApp = {
+        initData: Telegram.WebApp.initData || '',
+        initDataUnsafe: Telegram.WebApp.initDataUnsafe || {},
+        MainButton: Telegram.WebApp.MainButton,
+
+        init: function (options) {
+          $('body').css('visibility', '')
+          Telegram.WebApp.ready()
+          Telegram.WebApp.MainButton.setParams({
+            text: 'CLOSE WEBVIEW',
+            is_visible: true
+          }).onClick(DemoApp.close)
+        },
+        expand: function () {
+          Telegram.WebApp.expand()
+        },
+        close: function () {
+          Telegram.WebApp.close()
+        },
+        sendMessage: function (msg_id, with_webview) {
+          if (!DemoApp.initDataUnsafe.query_id) {
+            alert('WebViewQueryId not defined')
+            return
+          }
+          $('button').prop('disabled', true)
+          $('#btn_status').text('Sending...').removeClass('ok err').show()
+          DemoApp.apiRequest(
+            'sendMessage',
+            {
+              msg_id: msg_id || '',
+              with_webview: !DemoApp.initDataUnsafe.receiver && with_webview ? 1 : 0
+            },
+            function (result) {
+              $('button').prop('disabled', false)
+              if (result.ok) {
+                $('#btn_status').html('Message sent successfully!').addClass('ok').show()
+              } else if (result.description) {
+                $('#btn_status').text(result.description).addClass('err').show()
+                alert(result.description)
+              } else if (result.error) {
+                $('#btn_status').text(result.error).addClass('err').show()
+                alert(result.error)
+              } else {
+                $('#btn_status').text('Unknown error').addClass('err').show()
+                alert('Unknown error')
+              }
+            }
+          )
+        },
+        checkInitData: function () {
+          if (
+            DemoApp.initDataUnsafe.query_id &&
+            DemoApp.initData &&
+            $('#webview_data_status').hasClass('status_need')
+          ) {
+            $('#webview_data_status').removeClass('status_need')
+            DemoApp.apiRequest('checkInitData', {}, function (result) {
+              if (result.ok) {
+                $('#webview_data_status').html('Hash is correct (async)').addClass('ok')
+              } else {
+                $('#webview_data_status')
+                  .html(result.error + ' (async)')
+                  .addClass('err')
+              }
+            })
+          }
+        },
+
+        sendText: function (spam) {
+          var text = $('#text_field').val()
+          if (!text.length) {
+            return $('#text_field').focus()
+          }
+          if (byteLength(text) > 4096) {
+            return alert('Text is too long')
+          }
+          var repeat = spam ? 10 : 1
+          for (var i = 0; i < repeat; i++) {
+            Telegram.WebApp.sendData(text)
+          }
+        },
+        sendTime: function (spam) {
+          var repeat = spam ? 10 : 1
+          for (var i = 0; i < repeat; i++) {
+            Telegram.WebApp.sendData(new Date().toString())
+          }
+        },
+        requestLocation: function (el) {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+              $(el)
+                .next('span')
+                .html('(' + position.coords.latitude + ', ' + position.coords.longitude + ')')
+                .attr('class', 'ok')
+            })
+          } else {
+            $(el)
+              .next('span')
+              .html('Geolocation is not supported in this browser.')
+              .attr('class', 'err')
+          }
+          return false
+        },
+        requestVideo: function (el) {
+          if (navigator.mediaDevices) {
+            navigator.mediaDevices
+              .getUserMedia({ audio: false, video: true })
+              .then(function (stream) {
+                $(el).next('span').html('(Access granted)').attr('class', 'ok')
+              })
+          } else {
+            $(el)
+              .next('span')
+              .html('Media devices is not supported in this browser.')
+              .attr('class', 'err')
+          }
+          return false
+        },
+        requestAudio: function (el) {
+          if (navigator.mediaDevices) {
+            navigator.mediaDevices
+              .getUserMedia({ audio: true, video: false })
+              .then(function (stream) {
+                $(el).next('span').html('(Access granted)').attr('class', 'ok')
+              })
+          } else {
+            $(el)
+              .next('span')
+              .html('Media devices is not supported in this browser.')
+              .attr('class', 'err')
+          }
+          return false
+        },
+        toggleMainButton: function (el) {
+          if (DemoApp.MainButton.isVisible) {
+            DemoApp.MainButton.hide()
+            el.innerHTML = 'Show Main Button'
+          } else {
+            DemoApp.MainButton.show()
+            el.innerHTML = 'Hide Main Button'
+          }
+        },
+        showAlert: function (message) {
+          Telegram.WebApp.showAlert(message)
+        },
+        showConfirm: function (message) {
+          Telegram.WebApp.showConfirm(message)
+        },
+        showPopup: function () {
+          Telegram.WebApp.showPopup(
+            {
+              title: 'Popup title',
+              message: 'Popup message',
+              buttons: [
+                { id: 'delete', type: 'destructive', text: 'Delete all' },
+                { id: 'faq', type: 'default', text: 'Open FAQ' },
+                { type: 'cancel' }
+              ]
+            },
+            function (button_id) {
+              if (button_id == 'delete') {
+                DemoApp.showAlert("'Delete all' selected")
+              } else if (button_id == 'faq') {
+                Telegram.WebApp.openLink('https://telegram.org/faq')
+              }
+            }
+          )
+        },
+
+        apiRequest: function (method, data, onCallback) {
+          const authData = DemoApp.initData || ''
+          const basePath = window.location.pathname.split('/').slice(0, -3).join('/')
+          $.ajax(`${basePath}/telegram`, {
+            type: 'POST',
+            data: $.extend(data, { _auth: authData, method: method }),
+            dataType: 'json',
+            xhrFields: {
+              withCredentials: true
+            },
+            success: function (result) {
+              onCallback && onCallback(result)
+            },
+            error: function (xhr) {
+              onCallback && onCallback({ error: 'Server error' })
+            }
+          })
+        }
+      }
+
+      let DemoAppMenu = {
+        init: function () {
+          DemoApp.init()
+          $('body').addClass('gray')
+          Telegram.WebApp.setHeaderColor('secondary_bg_color')
+        }
+      }
+
+      let DemoAppInitData = {
+        init: function () {
+          DemoApp.init()
+          // $('body').addClass('gray');
+          // Telegram.WebApp.setHeaderColor('secondary_bg_color');
+
+          Telegram.WebApp.onEvent('themeChanged', function () {
+            $('#theme_data').html(JSON.stringify(Telegram.WebApp.themeParams, null, 2))
+          })
+          $('#webview_data').html(JSON.stringify(DemoApp.initDataUnsafe, null, 2))
+          $('#theme_data').html(JSON.stringify(Telegram.WebApp.themeParams, null, 2))
+          DemoApp.checkInitData()
+        }
+      }
+
+      let DemoAppViewport = {
+        init: function () {
+          DemoApp.init()
+          // $('body').addClass('gray');
+          // Telegram.WebApp.setHeaderColor('secondary_bg_color');
+          Telegram.WebApp.onEvent('viewportChanged', DemoAppViewport.setData)
+          DemoAppViewport.setData()
+        },
+        setData: function () {
+          $('.viewport-border').attr(
+            'text',
+            window.innerWidth + ' x ' + round(Telegram.WebApp.viewportHeight, 2)
+          )
+          $('.viewport-stable_border').attr(
+            'text',
+            window.innerWidth +
+              ' x ' +
+              round(Telegram.WebApp.viewportStableHeight, 2) +
+              ' | is_expanded: ' +
+              (Telegram.WebApp.isExpanded ? 'true' : 'false')
+          )
+        }
+      }
+
+      function byteLength(str) {
+        if (window.Blob) {
+          try {
+            return new Blob([str]).size
+          } catch (e) {}
+        }
+        var s = str.length
+        for (var i = str.length - 1; i >= 0; i--) {
+          var code = str.charCodeAt(i)
+          if (code > 0x7f && code <= 0x7ff) s++
+          else if (code > 0x7ff && code <= 0xffff) s += 2
+          if (code >= 0xdc00 && code <= 0xdfff) i--
+        }
+        return s
+      }
+
+      function round(val, d) {
+        var k = Math.pow(10, d || 0)
+        return Math.round(val * k) / k
+      }
+
+      Telegram.WebApp.onEvent('themeChanged', function () {
+        $('#theme_data').html(JSON.stringify(Telegram.WebApp.themeParams, null, 2))
+      })
+
+      $('#main_btn').toggle(!!DemoApp.initDataUnsafe.query_id)
+      $('#with_webview_btn').toggle(
+        !!DemoApp.initDataUnsafe.query_id && !DemoApp.initDataUnsafe.receiver
+      )
+      // $('#data_btn').toggle(!DemoApp.initDataUnsafe.query_id || !DemoApp.initDataUnsafe.receiver);
+      $('#webview_data').html(JSON.stringify(DemoApp.initDataUnsafe, null, 2))
+      $('#theme_data').html(JSON.stringify(Telegram.WebApp.themeParams, null, 2))
+      $('#regular_link').attr('href', $('#regular_link').attr('href') + location.hash)
+      $('#text_field').focus()
+
+      $('#ver').text(Telegram.WebApp.version)
+      $('#platform').text(Telegram.WebApp.platform)
+
+      if (DemoApp.initDataUnsafe.receiver) {
+        $('#peer_wrap').show()
+        $('#peer_name').text(
+          DemoApp.initDataUnsafe.receiver.first_name +
+            ' ' +
+            DemoApp.initDataUnsafe.receiver.last_name
+        )
+        if (DemoApp.initDataUnsafe.receiver.photo_url) {
+          $('#peer_photo').attr('src', DemoApp.initDataUnsafe.receiver.photo_url)
+        } else {
+          $('#peer_photo').hide()
+        }
+      } else if (DemoApp.initDataUnsafe.chat) {
+        $('#peer_wrap').show()
+        $('#peer_name').text(DemoApp.initDataUnsafe.chat.title)
+        if (DemoApp.initDataUnsafe.chat.photo_url) {
+          $('#peer_photo').attr('src', DemoApp.initDataUnsafe.chat.photo_url)
+        } else {
+          $('#peer_photo').hide()
+        }
+      }
+
+      DemoApp.checkInitData()
+
+      DemoApp.init()
+
+      function setViewportData() {
+        $('.viewport-border').attr(
+          'text',
+          window.innerWidth + ' x ' + round(Telegram.WebApp.viewportHeight, 2)
+        )
+        $('.viewport-stable_border').attr(
+          'text',
+          window.innerWidth +
+            ' x ' +
+            round(Telegram.WebApp.viewportStableHeight, 2) +
+            ' | is_expanded: ' +
+            (Telegram.WebApp.isExpanded ? 'true' : 'false')
+        )
+      }
+
+      Telegram.WebApp.setHeaderColor('secondary_bg_color')
+      Telegram.WebApp.onEvent('viewportChanged', setViewportData)
+      setViewportData()
+
+      var prev_bg_color_val = $('#bg_color_sel').val()
+      $('#bg_color_input').val(Telegram.WebApp.backgroundColor)
+      $('body').attr('style', '--bg-color:' + Telegram.WebApp.backgroundColor)
+      $('#header_color_sel').val('secondary_bg_color')
+      $('#header_color_sel').on('change', function (e) {
+        var color_key = e.target.value
+        $('#top_sect').toggleClass('second', color_key == 'secondary_bg_color')
+        Telegram.WebApp.setHeaderColor(color_key)
+        $('body').attr('style', '--bg-color:' + Telegram.WebApp.backgroundColor)
+      })
+      $('#bg_color_input').on('change', function (e) {
+        var color = e.target.value
+        $('#bg_color_val').text(color)
+        $('#bg_color_sel').val('custom')
+        prev_bg_color_val = $('#bg_color_sel').val()
+        Telegram.WebApp.setBackgroundColor(color)
+        $('body').attr('style', '--bg-color:' + Telegram.WebApp.backgroundColor)
+      })
+      $('#bg_color_sel').on('change', function (e) {
+        var color_key = e.target.value
+        if (color_key == 'custom') {
+          $('#bg_color_sel').val(prev_bg_color_val)
+          $('#bg_color_input').focus().click()
+        } else {
+          $('#bg_color_val').text('custom...')
+          Telegram.WebApp.setBackgroundColor(color_key)
+          $('body').attr('style', '--bg-color:' + Telegram.WebApp.backgroundColor)
+          $('#bg_color_input').val(Telegram.WebApp.backgroundColor)
+          prev_bg_color_val = $('#bg_color_sel').val()
+        }
+      })
+      Telegram.WebApp.onEvent('themeChanged', function () {
+        $('#bg_color_input').val(Telegram.WebApp.backgroundColor)
+        $('body').attr('style', '--bg-color:' + Telegram.WebApp.backgroundColor)
+      })
+    </script>
   </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+  <body
+    class=""
+    style="--bg-color: undefined"
+    data-new-gr-c-s-check-loaded="14.1079.0"
+    data-gr-ext-installed=""
+  >
+    <section id="top_sect" class="second">
+      <button id="main_btn" onclick="DemoApp.sendMessage('');" style="display: none">
+        Send «Hello, World!»
+      </button>
+      <button id="with_webview_btn" onclick="DemoApp.sendMessage('', true);" style="display: none">
+        Send «Hello, World!» with inline webview button
+      </button>
+      <button onclick="DemoApp.expand();">Expand Webview</button>
+      <button onclick="DemoApp.toggleMainButton(this);">Hide Main Button</button>
+      <input type="text" placeholder="Regular field" />
+      <div class="input" contenteditable="true" data-placeholder="Contenteditable field"></div>
+      <div id="peer_wrap" style="display: none">
+        <img
+          id="peer_photo"
+          class="chat_img"
+          src="https://webappcontent.telegram.org/demo?mode=menu"
+        />
+        <span id="peer_name"></span>
+      </div>
+      <div class="sect_row">
+        Header:
+        <select id="header_color_sel">
+          <option value="bg_color" selected="">bg_color</option>
+          <option value="secondary_bg_color">secondary_bg_color</option>
+        </select>
+      </div>
+      <div class="sect_row">
+        Background: <input type="color" id="bg_color_input" />
+        <select id="bg_color_sel">
+          <option value="bg_color" selected="">bg_color</option>
+          <option value="secondary_bg_color">secondary_bg_color</option>
+          <option value="custom" id="bg_color_val">custom...</option>
+        </select>
+      </div>
+    </section>
+    <section>
+      <div id="btn_status" class="hint" style="display: none"></div>
+      <p>Test links:</p>
+      <ul>
+        <li>
+          <a id="regular_link" href="https://webappcontent.telegram.org/demo?nextpage=1"
+            >Regular link #1</a
+          >
+          (opens inside webview)
+        </li>
+        <li>
+          <a href="https://telegram.org/" target="_blank">target="_blank" link</a> (opens outside
+          webview)
+        </li>
+        <li>
+          <a href="javascript:window.open(&#39;https://telegram.org/&#39;);">window.open() link</a>
+          (opens outside webview)
+        </li>
+        <li><a href="https://t.me/like">LikeBot t.me link</a> (opens inside Telegram app)</li>
+        <li>
+          <a href="javascript:Telegram.WebApp.openTelegramLink(&#39;https://t.me/vote&#39;);"
+            >web_app_open_tg_link()</a
+          >
+          (opens inside Telegram app)
+        </li>
+        <li>
+          <a href="javascript:Telegram.WebApp.openLink(&#39;https://google.com/&#39;);"
+            >web_app_open_link()</a
+          >
+          (opens outside webview)
+        </li>
+        <li><a href="tg://resolve?domain=vote">VoteBot tg:// link</a> (does not open)</li>
+      </ul>
+      <p>Test permissions:</p>
+      <ul>
+        <li>
+          <a href="javascript:;" onclick="return DemoApp.requestLocation(this);"
+            >Request Location</a
+          >
+          <span></span>
+        </li>
+        <li>
+          <a href="javascript:;" onclick="return DemoApp.requestVideo(this);">Request Video</a>
+          <span></span>
+        </li>
+        <li>
+          <a href="javascript:;" onclick="return DemoApp.requestAudio(this);">Request Audio</a>
+          <span></span>
+        </li>
+      </ul>
+      <p>Test alerts:</p>
+      <div class="columns">
+        <ul>
+          <li><a href="javascript:;" onclick="alert('Hello!');">alert</a></li>
+          <li><a href="javascript:;" onclick="confirm('Are you sure?');">confirm</a></li>
+          <li><a href="javascript:;" onclick="prompt('How old are you?');">prompt</a></li>
+        </ul>
+        <ul>
+          <li><a href="javascript:;" onclick="DemoApp.showAlert('Hello!');">showAlert</a></li>
+          <li>
+            <a href="javascript:;" onclick="DemoApp.showConfirm('Are you sure?');">showConfirm</a>
+          </li>
+          <li><a href="javascript:;" onclick="DemoApp.showPopup();">showPopup</a></li>
+        </ul>
+      </div>
+      <p>Haptics:</p>
+      <ul>
+        <li>
+          Impact:
+          <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred(&#39;heavy&#39;);"
+            >heavy</a
+          >, &nbsp;
+          <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred(&#39;light&#39;);"
+            >light</a
+          >, &nbsp;
+          <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred(&#39;medium&#39;);"
+            >medium</a
+          >, &nbsp;
+          <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred(&#39;rigid&#39;);"
+            >rigid</a
+          >, &nbsp;
+          <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred(&#39;soft&#39;);"
+            >soft</a
+          ><br /><br />
+        </li>
+        <li>
+          Notification:
+          <a href="javascript:Telegram.WebApp.HapticFeedback.notificationOccurred(&#39;error&#39;);"
+            >error</a
+          >, &nbsp;
+          <a
+            href="javascript:Telegram.WebApp.HapticFeedback.notificationOccurred(&#39;success&#39;);"
+            >success</a
+          >, &nbsp;
+          <a
+            href="javascript:Telegram.WebApp.HapticFeedback.notificationOccurred(&#39;warning&#39;);"
+            >warning</a
+          ><br /><br />
+        </li>
+        <li>
+          Selection:
+          <a href="javascript:Telegram.WebApp.HapticFeedback.selectionChanged();">changed</a
+          ><br /><br />
+        </li>
+      </ul>
+      <pre><code id="webview_data">{}</code></pre>
+      <div class="hint">
+        Data passed to webview.
+        <span id="webview_data_status" class="status_need">Checking hash...</span>
+      </div>
+      <pre><code id="theme_data">{}</code></pre>
+      <div class="hint">Theme params</div>
+      <div class="hint">
+        Version: <span id="ver">6.0</span>, platform: <span id="platform">unknown</span>
+      </div>
+    </section>
+    <div class="viewport-border" text="1920 x 880"></div>
+    <div class="viewport-stable_border" text="1920 x 880 | is_expanded: true"></div>
   </body>
 </html>
