@@ -401,10 +401,10 @@
       // });
 
       Telegram.WebApp.enableClosingConfirmation();
+      let height = Math.ceil(Telegram.WebApp.viewportHeight);
+      const currentHeight = Math.ceil(Telegram.WebApp.viewportHeight);
       Telegram.WebApp.onEvent('viewportChanged', ({ isStateStable }) => {
         let flag = true;
-        let height = Math.ceil(Telegram.WebApp.viewportHeight);
-        const currentHeight = Math.ceil(Telegram.WebApp.viewportHeight);
         console.log(height, currentHeight);
         console.log(height > currentHeight);
         if (height > currentHeight) {
