@@ -395,13 +395,20 @@
 
 
     <script>
-      Telegram.WebApp.onEvent('mainButtonClicked', (e) => {
-        console.log('mainButtonClicked', e);
-        Telegram.WebApp.expand();
-      });
-      // Telegram.WebApp.onEvent('viewportChanged', (e) => {
-      //   console.log('viewportChanged', e);
+      // Telegram.WebApp.onEvent('mainButtonClicked', (e) => {
+      //   console.log('mainButtonClicked', e);
+      //   Telegram.WebApp.expand();
       // });
+      let height = 0;
+      Telegram.WebApp.onEvent('viewportChanged', (e) => {
+        console.log('viewportChanged', e);
+        if (height < e.height) {
+          Telegram.WebApp.expand();
+          if (e.is_state_stable) {
+            height = e.height;
+          }
+        }
+      });
 
       // Telegram.WebApp.onEvent('viewportChanged', (e) => {
       //   console.log('viewportChanged', e);
