@@ -411,7 +411,7 @@
         if (height > currentHeight) {
           Telegram.WebApp.expand();
         }
-        if (flag) {
+        if (flag && isStateStable) {
           height = currentHeight;
           flag = false;
         }
