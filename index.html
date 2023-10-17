@@ -395,22 +395,16 @@
 
 
     <script>
-      // Telegram.WebApp.onEvent('mainButtonClicked', (e) => {
-      //   console.log('mainButtonClicked', e);
-      //   Telegram.WebApp.expand();
-      // });
-
       Telegram.WebApp.enableClosingConfirmation();
-
       let updateHeightFlag = true;
       let height = Math.ceil(Telegram.WebApp.viewportHeight);
       Telegram.WebApp.onEvent('viewportChanged', ({ isStateStable }) => {
         const currentHeight = Math.ceil(Telegram.WebApp.viewportHeight);
-        console.log(height, currentHeight);
-        console.log(height > currentHeight);
+
         if (height > currentHeight && !isStateStable) {
           Telegram.WebApp.expand();
         }
+
         if (updateHeightFlag && Telegram.WebApp.isExpanded) {
           height = currentHeight;
           updateHeightFlag = false;
