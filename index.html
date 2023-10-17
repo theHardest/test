@@ -254,8 +254,10 @@
       let DemoAppViewport = {
         init: function () {
           DemoApp.init()
+          console.log('init');
           // $('body').addClass('gray');
           // Telegram.WebApp.setHeaderColor('secondary_bg_color');
+          Telegram.WebApp.isExpanded = true
           Telegram.WebApp.onEvent('viewportChanged', DemoAppViewport.setData)
           DemoAppViewport.setData()
         },
