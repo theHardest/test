@@ -15,9 +15,6 @@ const router = useRouter();
 WebApp.ready();
 WebApp.BackButton.onClick(() => {
   router.back();
-  if (window.history.length === 1) {
-    WebApp.BackButton.hide();
-  }
 });
 WebApp.enableClosingConfirmation();
 let updateHeightFlag = true;

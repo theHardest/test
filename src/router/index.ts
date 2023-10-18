@@ -22,9 +22,10 @@ const router = createRouter({
 })
 
 router.afterEach((to, from) => {
-  console.log(window.history.length);
-  if (window.history.length > 1) {
+  if (to.name === 'home') {
     WebApp.BackButton.show();
+  } else {
+    WebApp.BackButton.hide();
   }
 });
 
