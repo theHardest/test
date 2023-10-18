@@ -100,13 +100,13 @@ main.root {
   flex: 1;
   position: relative;
   overflow: hidden;
-  background-color: white;
+  /* background-color: white; */
 }
 
 main.root .component {
   grid-area: main; /* Transition: make sections overlap on same cell */
   flex: 1 1 auto;
-  background-color: white;
+  /* background-color: white; */
   position: relative;
   height: 100vh; /* To be fixed */
 }
