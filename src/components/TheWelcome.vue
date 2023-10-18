@@ -57,13 +57,14 @@ function toggleMainButton() {
 //   'https://web.org'
 // )
 
-// window.TelegramWebviewProxy.postEvent(
-//   'web_app_setup_back_button',
-//   JSON.stringify({
-//     is_visible: true
-//   }),
-//   'https://web.org'
-// )
+WebApp.BackButton.show();
+window.TelegramWebviewProxy.postEvent(
+  'web_app_setup_back_button',
+  JSON.stringify({
+    is_visible: true
+  }),
+  'https://web.org'
+)
 
 WebApp.setHeaderColor('secondary_bg_color')
 
