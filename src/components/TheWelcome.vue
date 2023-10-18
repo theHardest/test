@@ -65,25 +65,25 @@ function toggleMainButton() {
 //   'https://web.telegram.org'
 // )
 
-WebApp.setHeaderColor('secondary_bg_color')
+// WebApp.setHeaderColor('secondary_bg_color')
 
-WebApp.onEvent('themeChanged', function () {
-  document.body.setAttribute('style', '--bg-color:' + WebApp.backgroundColor)
-})
-onMounted(() => {
-  function setViewportData() {
-    var sizeEl = document.getElementById('viewport-params-size')
-    if (!sizeEl) return
-    sizeEl.innerText =
-      'width: ' + window.innerWidth + ' x ' + 'height: ' + WebApp.viewportStableHeight
+// WebApp.onEvent('themeChanged', function () {
+//   document.body.setAttribute('style', '--bg-color:' + WebApp.backgroundColor)
+// })
+// onMounted(() => {
+//   function setViewportData() {
+//     var sizeEl = document.getElementById('viewport-params-size')
+//     if (!sizeEl) return
+//     sizeEl.innerText =
+//       'width: ' + window.innerWidth + ' x ' + 'height: ' + WebApp.viewportStableHeight
 
-    var expandEl = document.getElementById('viewport-params-expand')
-    if (!expandEl) return
-    expandEl.innerText = 'Is Expanded: ' + (WebApp.isExpanded ? 'true' : 'false')
-  }
-  setViewportData()
-  WebApp.onEvent('viewportChanged', setViewportData)
-})
+//     var expandEl = document.getElementById('viewport-params-expand')
+//     if (!expandEl) return
+//     expandEl.innerText = 'Is Expanded: ' + (WebApp.isExpanded ? 'true' : 'false')
+//   }
+//   setViewportData()
+//   WebApp.onEvent('viewportChanged', setViewportData)
+// })
 </script>
 
 <template>
@@ -116,7 +116,7 @@ onMounted(() => {
     <button @click="WebApp.expand">Expand Webview</button>
     <button @click="toggleMainButton">Toggle Main Button</button>
   </main>
-  <div id="viewport"></div>
+  <!-- <div id="viewport"></div>
   <div id="viewport-params-size"></div>
-  <div id="viewport-params-expand"></div>
+  <div id="viewport-params-expand"></div> -->
 </template>
