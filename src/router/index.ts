@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import WebApp from '@twa-dev/sdk';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,5 +20,14 @@ const router = createRouter({
     }
   ]
 })
+
+router.afterEach((to, from) => {
+  console.log(window.history.length);
+  if (window.history.length > 0) {
+    WebApp.BackButton.show();
+  } else {
+    WebApp.BackButton.hide();
+  }
+});
 
 export default router

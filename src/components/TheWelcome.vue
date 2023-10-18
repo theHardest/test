@@ -119,5 +119,4 @@ onMounted(() => {
   <div id="viewport"></div>
   <div id="viewport-params-size"></div>
   <div id="viewport-params-expand"></div>
-  <router-link to="/about">about</router-link>
 </template>

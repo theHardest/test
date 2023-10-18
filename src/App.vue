@@ -7,10 +7,15 @@
   <RouterView />
 </template>
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router';
+import { useRouter } from 'vue-router';
 import WebApp from '@twa-dev/sdk';
 
+const router = useRouter();
+
 WebApp.ready();
+WebApp.BackButton.onClick(() => {
+  router.back();
+});
 WebApp.enableClosingConfirmation();
 let updateHeightFlag = true;
 let height = Math.ceil(WebApp.viewportHeight);
