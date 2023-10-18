@@ -54,17 +54,16 @@ function toggleMainButton() {
 //     eventType: 'web_app_setup_back_button',
 //     eventData: { is_visible: true }
 //   }),
-//   'https://web.org'
+//   'https://web.telegram.org'
 // )
 
-WebApp.BackButton.show();
-window.TelegramWebviewProxy.postEvent(
-  'web_app_setup_back_button',
-  JSON.stringify({
-    is_visible: true
-  }),
-  'https://web.org'
-)
+// window.TelegramWebviewProxy.postEvent(
+//   'web_app_setup_back_button',
+//   JSON.stringify({
+//     is_visible: true
+//   }),
+//   'https://web.telegram.org'
+// )
 
 WebApp.setHeaderColor('secondary_bg_color')
 
