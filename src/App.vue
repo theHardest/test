@@ -12,7 +12,6 @@ import WebApp from '@twa-dev/sdk';
 
 const router = useRouter();
 
-WebApp.ready();
 WebApp.BackButton.onClick(() => {
   router.back();
 });

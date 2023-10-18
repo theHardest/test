@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import WebApp from '@twa-dev/sdk';
 
+WebApp.ready();
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -22,7 +23,6 @@ const router = createRouter({
 })
 
 router.afterEach((to, from) => {
-  console.log(document.referrer);
   if (to.name === 'home') {
     WebApp.BackButton.hide();
   } else {
