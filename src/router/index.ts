@@ -25,8 +25,6 @@ router.afterEach((to, from) => {
   console.log(window.history.length);
   if (window.history.length > 1) {
     WebApp.BackButton.show();
-  } else {
-    WebApp.BackButton.hide();
   }
 });
 
