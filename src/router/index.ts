@@ -23,6 +23,8 @@ const router = createRouter({
 })
 
 router.afterEach((to, from) => {
+  console.log(to.name);
+  
   if (to.name === 'home') {
     WebApp.BackButton.hide();
   } else {
